@@ -4,7 +4,7 @@ import {CallbackLike1} from "../../callbacks/callback"
 import {Tooltip, TooltipView} from "../../annotations/tooltip"
 import {Renderer, RendererView} from "../../renderers/renderer"
 import {GlyphRenderer, GlyphRendererView} from "../../renderers/glyph_renderer"
-import {GraphRenderer/*, GraphRendererView*/} from "../../renderers/graph_renderer"
+import {GraphRenderer} from "../../renderers/graph_renderer"
 import {DataRenderer} from "../../renderers/data_renderer"
 import {LineView} from "../../glyphs/line"
 import {MultiLineView} from "../../glyphs/multi_line"
@@ -182,7 +182,7 @@ export class HoverToolView extends InspectToolView {
 
     for (const r of this.computed_renderers) {
       const sm = r.get_selection_manager()
-      sm.inspect(this.plot_view.renderer_views.get(r)!, geometry)
+      sm.inspect(this.plot_view.renderer_view(r)!, geometry)
     }
 
     this._emit_callback(geometry)
@@ -216,6 +216,7 @@ export class HoverToolView extends InspectToolView {
     }
 
     const ds = selection_manager.source
+    // const renderer_view = this.plot_view.renderer_view(renderer)!
 
     const {sx, sy} = geometry
     const xscale = renderer_view.coordinates.x_scale
@@ -391,7 +392,7 @@ export class HoverToolView extends InspectToolView {
       if (!(renderer instanceof GlyphRenderer))
         continue
 
-      const glyph_renderer_view = this.plot_view.renderer_views.get(renderer)!
+      const glyph_renderer_view = this.plot_view.renderer_view(renderer)!
       const {x_scale, y_scale} = glyph_renderer_view.coordinates
       const x = x_scale.invert(geometry.sx)
       const y = y_scale.invert(geometry.sy)
